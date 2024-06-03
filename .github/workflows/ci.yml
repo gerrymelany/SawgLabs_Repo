@@ -10,20 +10,13 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
 
-    services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        options: >-
-          --name selenium
-          --network-alias selenium
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up Docker
       run: |
-        sudo service docker start  # Inicia el servicio Docker si no está iniciado
+        sudo service docker start  
 
     - name: Set up Python
       uses: actions/setup-python@v2
