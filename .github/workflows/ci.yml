@@ -53,35 +53,6 @@ jobs:
     - name: Check Docker network status
       run: docker network inspect bridge
 
-    - name: Wait for Selenium to be ready
-      run: |
-        max_attempts=30
-        wait_seconds=15
-        attempt=0
-
-        echo "Waiting for Selenium to be ready..."
-
-        until [ $attempt -ge $max_attempts ]
-        do
-            if curl -s http://localhost:4444/wd/hub/status | grep -q '"ready":true'; then
-                echo "Selenium is ready!"
-                break
-            fi
-
-            echo "Selenium is not yet ready. Waiting..."
-            attempt=$((attempt+1))
-            sleep $wait_seconds
-        done
-
-        if [ $attempt -ge $max_attempts ]; then
-            echo "Timeout: Selenium did not become ready after waiting for $((max_attempts * wait_seconds)) seconds."
-            exit 1
-        fi
-
-    - name: Check Selenium status
-      run: |
-        docker ps -a | grep selenium
-
     - name: Run Behave tests
       run: |
         behave
