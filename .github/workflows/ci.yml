@@ -21,20 +21,49 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Set up Docker
+      run: |
+        sudo service docker start  # Inicia el servicio Docker si no está iniciado
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.11
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Wait for Docker to start
+      run: |
+        max_attempts=10
+        wait_seconds=5
+        attempt=0
+
+        echo "Waiting for Docker to start..."
+
+        until docker info >/dev/null 2>&1
+        do
+            echo "Docker is not yet ready. Waiting..."
+            attempt=$((attempt+1))
+            sleep $wait_seconds
+            if [ $attempt -ge $max_attempts ]; then
+                echo "Timeout: Docker did not become ready after waiting for $((max_attempts * wait_seconds)) seconds."
+                exit 1
+            fi
+        done
+
+    - name: Check Docker version
+      run: docker --version
+
+    - name: Check Docker network status
+      run: docker network inspect bridge
+
     - name: Wait for Selenium to be ready
       run: |
-        max_attempts=30  
-        wait_seconds=15  
+        max_attempts=30
+        wait_seconds=15
         attempt=0
 
         echo "Waiting for Selenium to be ready..."
