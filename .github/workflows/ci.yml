@@ -33,8 +33,8 @@ jobs:
 
     - name: Wait for Selenium to be ready
       run: |
-        max_attempts=20
-        wait_seconds=10
+        max_attempts=30  
+        wait_seconds=15  
         attempt=0
 
         echo "Waiting for Selenium to be ready..."
@@ -55,6 +55,10 @@ jobs:
             echo "Timeout: Selenium did not become ready after waiting for $((max_attempts * wait_seconds)) seconds."
             exit 1
         fi
+
+    - name: Check Selenium status
+      run: |
+        docker ps -a | grep selenium
 
     - name: Run Behave tests
       run: |
