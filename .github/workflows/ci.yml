@@ -10,6 +10,13 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
 
+    services:
+      selenium:
+        image: selenium/standalone-chrome:4.14.0
+        options: >-
+          --name selenium
+          --network-alias selenium
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
