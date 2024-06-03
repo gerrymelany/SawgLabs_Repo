@@ -5,10 +5,10 @@ from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 
 if os.getenv("CI"):
-    # usar la ubicación predeterminada del chromedriver
+    # usa la ubicación predeterminada del chromedriver
     driver = webdriver.Chrome()
 else:
-    # usar la ubicación especificada en la configuración
+    # usa la ubicación especificada en la configuración
     chrome_options.binary_location = 'executable_path=/home/mgerry/path/chromedriver'
     driver = webdriver.Chrome(options=chrome_options)
 

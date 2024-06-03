@@ -74,8 +74,7 @@ Other tools: Selenium WebDriver for automated UI testing and Git for version con
 
 1. **Clone the Repository**
    ```sh
-   $ git clone https://github.com/yourusername/swag-labs-automation.git
-   $ cd swag-labs-automation
+   $ git clone https://github.com/gerrymelany/SwagLabs_Gherkin.git
    ```
 
 2. **Activate the Virtual Environment**
@@ -127,10 +126,6 @@ Other tools: Selenium WebDriver for automated UI testing and Git for version con
      ```sh
      $ pip install -r requirements_venv.txt
      ```
-
-Claro, aquí tienes la sección "Contributing" en inglés, personalizada con la URL de tu proyecto:
-
----
 
 ## Contributing
 
