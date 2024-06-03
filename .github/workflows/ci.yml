@@ -26,23 +26,21 @@ jobs:
 
     - name: Wait for Docker to start (if using Docker on Windows)
       run: |
-        max_attempts=10
-        wait_seconds=5
-        attempt=0
-    
-        echo "Waiting for Docker to start..."
-    
-        until docker info >/dev/null 2>&1
-        do
-            echo "Docker is not yet ready. Waiting..."
-            attempt=$((attempt+1))
-            sleep $wait_seconds
-            if [ $attempt -ge $max_attempts ]; then
-                echo "Timeout: Docker did not become ready after waiting for $((max_attempts * wait_seconds)) seconds."
+        $max_attempts=10
+        $wait_seconds=5
+        $attempt=0
+
+        Write-Output "Waiting for Docker to start..."
+
+        do {
+            Write-Output "Docker is not yet ready. Waiting..."
+            $attempt++
+            Start-Sleep -Seconds $wait_seconds
+            if ($attempt -ge $max_attempts) {
+                Write-Output "Timeout: Docker did not become ready after waiting for $($max_attempts * $wait_seconds) seconds."
                 exit 1
-            fi
-        done
-    
+            }
+        } until ((docker info) -or ($attempt -ge $max_attempts))
 
     - name: Wait for Selenium to be ready
       run: |
