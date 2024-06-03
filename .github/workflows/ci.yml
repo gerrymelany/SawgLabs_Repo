@@ -8,22 +8,11 @@ on:
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-latest
-
-    services:
-      selenium:
-        image: selenium/standalone-chrome:4.1.0
-        options: >-
-          --name selenium
-          --network-alias selenium
+    runs-on: windows-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
-    - name: Set up Docker
-      run: |
-        sudo service docker start  
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -35,7 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Wait for Docker to start
+    - name: Wait for Docker to start (if using Docker on Windows)
       run: |
         max_attempts=10
         wait_seconds=5
@@ -54,15 +43,34 @@ jobs:
             fi
         done
 
-    - name: Check Docker version
-      run: docker --version
+    - name: Wait for Selenium to be ready
+      run: |
+        max_attempts=50
+        wait_seconds=15
+        attempt=0
 
-    - name: Check Docker network status
-      run: docker network inspect bridge
+        echo "Waiting for Selenium to be ready..."
+
+        until [ $attempt -ge $max_attempts ]
+        do
+            if curl -s http://localhost:4444/wd/hub/status | grep -q '"ready":true'; then
+                echo "Selenium is ready!"
+                break
+            fi
+
+            echo "Selenium is not yet ready. Waiting..."
+            attempt=$((attempt+1))
+            sleep $wait_seconds
+        done
+
+        if [ $attempt -ge $max_attempts ]; then
+            echo "Timeout: Selenium did not become ready after waiting for $((max_attempts * wait_seconds)) seconds."
+            exit 1
+        fi
 
     - name: Check Selenium status
       run: |
-        docker exec -it selenium curl http://localhost:4444/wd/hub/status
+        curl http://localhost:4444/wd/hub/status
 
     - name: Run Behave tests
       run: |
