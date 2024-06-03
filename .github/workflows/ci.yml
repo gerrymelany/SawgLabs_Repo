@@ -1,4 +1,4 @@
-name: CI for Behave Tests
+name: CI Test Automation
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ develop, master ]
 
 jobs:
-  test:
+  build_and_test:
     runs-on: ubuntu-latest
 
     services:
@@ -16,7 +16,7 @@ jobs:
         options: >-
           --name selenium
           --network-alias selenium
-          --health-cmd curl -f http://localhost:4444/wd/hub || exit 1
+          --health-cmd "curl --silent --fail http://localhost:4444/wd/hub || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -28,7 +28,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.11
+        python-version: 3.8
 
     - name: Install dependencies
       run: |
