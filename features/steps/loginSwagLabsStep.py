@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from features.pages.globalFunctions import BaseFunctions
 from features.pages.loginSwagLabsPage import LoginPage
 
-tie = 5
+tie = 0
 
 @given(u'I go to the login page')
 def step_impl(context):
